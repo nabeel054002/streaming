@@ -1,0 +1,18 @@
+learn abt python socket 
+4 bytes separated by a dot == ip address
+unique fir each connected device 
+
+ip addy assigned either statically or dynamically 
+
+dynamically = each device configured by dhcp
+this allows for frequent leave and join 
+functionality 
+
+network socket = virtual end point that 
+can indulge in inter network comms 
+
+/////////
+now to finally do the live stream or video 
+sending from client to server 
+so first get video using opencv and using pickle change into bits data 
+

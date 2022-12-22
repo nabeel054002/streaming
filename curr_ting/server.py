@@ -15,11 +15,10 @@ socket_address=(IP,PORT)
 server_socket.bind(socket_address)
 server_socket.listen()
 print("Listening at",socket_address)
-fourcc = cv2.VideoWriter_fourcc(*'MJPG')
+fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
 fps=30
 size=(640,480)
-output_file="output.avi"
-out = cv2.VideoWriter(output_file, fourcc, fps, size, True)
+writer = cv2.VideoWriter("output.mp4", fourcc, fps, size)
 
 def show_client(addr,client_socket):
     try:
@@ -43,12 +42,12 @@ def show_client(addr,client_socket):
                 frame = pickle.loads(frame_data)
                 text  =  f"CLIENT: {addr}"
                 frame =  ps.putBText(frame,text,10,10,vspace=10,hspace=1,font_scale=0.7, background_RGB=(255,0,0),text_RGB=(255,250,250))
-                out.write(frame)
+                writer.write(frame)
                 cv2.imshow(f"FROM\{addr}",frame)
                 key = cv2.waitKey(1)
                 if key  == ord('q'):
                     break
-        out.release()
+        writer.release()
         client_socket.close()
     except Exception as e:
         print(f"CLIENT {addr} DISCONNECTED")

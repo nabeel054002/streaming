@@ -6,6 +6,7 @@ import imutils
 import threading
 import pyshine as ps # pip install pyshine
 import cv2
+import numpy as np
 import time
 
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
@@ -15,11 +16,17 @@ socket_address=(IP,PORT)
 server_socket.bind(socket_address)
 server_socket.listen()
 print("Listening at",socket_address)
-fourcc = cv2.VideoWriter_fourcc('m', 'p', '4', 'v')
+fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 fps=30
 size=(640,480)
 writer = cv2.VideoWriter("output.mp4", fourcc, fps, size)
-
+def pil_to_cv(pil_image):
+    """
+    Returns a copy of an image in a representation suited for OpenCV
+    :param pil_image: PIL.Image object
+    :return: Numpy array compatible with OpenCV
+    """
+    return np.array(pil_image)[:, :, ::-1]
 def show_client(addr,client_socket):
     try:
         print('CLIENT {} CONNECTED!'.format(addr))
@@ -42,7 +49,7 @@ def show_client(addr,client_socket):
                 frame = pickle.loads(frame_data)
                 text  =  f"CLIENT: {addr}"
                 frame =  ps.putBText(frame,text,10,10,vspace=10,hspace=1,font_scale=0.7, background_RGB=(255,0,0),text_RGB=(255,250,250))
-                writer.write(frame)
+                writer.write(pil_to_cv(frame))
                 cv2.imshow(f"FROM\{addr}",frame)
                 key = cv2.waitKey(1)
                 if key  == ord('q'):
